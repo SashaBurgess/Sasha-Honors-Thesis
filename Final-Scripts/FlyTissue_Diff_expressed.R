@@ -58,7 +58,25 @@ MCA=G_X_E$table
 sMCA=MCA[MCA$FDR<.05,]
 dim(sMCA)
 
-#write.csv(sMCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCTvsOOMCT.csv")
+compare = makeContrasts(SOFCA-OOFCA, levels=design)
+lrt <- glmLRT(fit,contrast=as.vector(compare))		
+G_X_E<-topTags(lrt,adjust.method="BH",n = nrow(z$counts), sort.by="PValue")
+FCA=G_X_E$table
+sFCA=FCA[FCA$FDR<.05,]
+dim(sFCA)
+
+write.csv(sMCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCHvsOOMCH.csv")
+write.csv(MCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCHvsOOMCH.csv")
+write.csv(sFCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCHvsOOFCH.csv")
+write.csv(FCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCHvsOOFCH.csv")
+write.csv(sMCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCTvsOOMCT.csv")
+write.csv(MCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCTvsOOMCT.csv")
+write.csv(sFCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCTvsOOFCT.csv")
+write.csv(FCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCTvsOOFCT.csv")
+write.csv(sMCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCAvsOOMCA.csv")
+write.csv(MCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCAvsOOMCA.csv")
+write.csv(sFCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCAvsOOFCA.csv")
+write.csv(FCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCAvsOOFCA.csv")
 #write.csv(cpmdata,"/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/cpmdata.csv")
 
 colnames(cpmdata)[43:45]
