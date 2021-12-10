@@ -18,8 +18,10 @@ cpmdata=cpm(z2,base=2)
 
 #######Everything######
 pca <- prcomp(t(cpmdata), scale.=TRUE) 
-pointSize = 5
-autoplot(pca)
+pointSize = 3
+gr <- as.data.frame(groups)
+autoplot(pca, data=gr, shape="Sex", colour="Tissue", size=pointSize, main="All")
+
 
 #######HeadControl######
 HeadSamples<-row.names(groups)[groups$Tissue=="Head"&groups$Treatment=="Control"]
