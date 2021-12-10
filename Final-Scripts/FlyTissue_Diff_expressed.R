@@ -30,4 +30,36 @@ MCH=G_X_E$table
 sMCH=MCH[MCH$FDR<.05,]
 dim(sMCH)
 
-write.csv(sMCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCHvsOOMCH.csv")
+compare = makeContrasts(SOFCH-OOFCH, levels=design)
+lrt <- glmLRT(fit,contrast=as.vector(compare))		
+G_X_E<-topTags(lrt,adjust.method="BH",n = nrow(z$counts), sort.by="PValue")
+FCH=G_X_E$table
+sFCH=FCH[FCH$FDR<.05,]
+dim(sFCH)
+
+compare = makeContrasts(SOMCT-OOMCT, levels=design)
+lrt <- glmLRT(fit,contrast=as.vector(compare))		
+G_X_E<-topTags(lrt,adjust.method="BH",n = nrow(z$counts), sort.by="PValue")
+MCT=G_X_E$table
+sMCT=MCT[MCT$FDR<.05,]
+dim(sMCT)
+
+compare = makeContrasts(SOFCT-OOFCT, levels=design)
+lrt <- glmLRT(fit,contrast=as.vector(compare))		
+G_X_E<-topTags(lrt,adjust.method="BH",n = nrow(z$counts), sort.by="PValue")
+FCT=G_X_E$table
+sFCT=FCT[FCT$FDR<.05,]
+dim(sFCT)
+
+compare = makeContrasts(SOMCA-OOMCA, levels=design)
+lrt <- glmLRT(fit,contrast=as.vector(compare))		
+G_X_E<-topTags(lrt,adjust.method="BH",n = nrow(z$counts), sort.by="PValue")
+MCA=G_X_E$table
+sMCA=MCA[MCA$FDR<.05,]
+dim(sMCA)
+
+#write.csv(sMCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCTvsOOMCT.csv")
+#write.csv(cpmdata,"/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/cpmdata.csv")
+
+colnames(cpmdata)[43:45]
+design$SOMCT
