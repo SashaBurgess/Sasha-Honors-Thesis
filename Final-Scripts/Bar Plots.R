@@ -15,3 +15,16 @@ SOMCTvsOOMCT<-read.csv("https://raw.githubusercontent.com/SashaBurgess/Sasha-Hon
 SOFCTvsOOFCT<-read.csv("https://raw.githubusercontent.com/SashaBurgess/Sasha-Honors-Thesis/main/Final-tables/SOFCTvsOOFCT.csv", row.names = 1)
 SOMCAvsOOMCA<-read.csv("https://raw.githubusercontent.com/SashaBurgess/Sasha-Honors-Thesis/main/Final-tables/SOMCAvsOOMCA.csv", row.names = 1)
 SOFCAvsOOFCA<-read.csv("https://raw.githubusercontent.com/SashaBurgess/Sasha-Honors-Thesis/main/Final-tables/SOFCAvsOOFCA.csv", row.names = 1)
+
+MH<-count(sig_SOMCHvsOOMCH)
+FH<-count(sig_SOFCHvsOOFCH)
+MT<-count(sig_SOMCTvsOOMCT)
+FT<-count(sig_SOFCTvsOOFCT)
+MA<-count(sig_SOMCAvsOOMCA)
+FA<-count(sig_SOFCAvsOOFCA)
+
+allcounts<-cbind(MH[1,1],FH[1,1],MT[1,1],FT[1,1],MA[1,1],FA[1,1])
+allcounts<-cbind(35,12,1866,122,6,15)
+colnames(allcounts)=c("SOMCHvsOOMCH","SOFCHvsOOFCH","SOMCTvsOOMCT","SOFCTvsOOFCT","SOMCAvsOOMCA","SOFCAvsOOFCA")
+
+barplot(allcounts, main = "Significant Differentiated Genes-SO vs OO in Control Flies", ylab = "Sig Diff Genes", names.arg = c("Male Head","Female Head","Male Thorax","Female Thorax","Male Abdomen","Female Abdomen"), col = "darkred", cex.axis = 1, cex.lab=1, cex.names=1, cex.main=1, ylim=c(0,2000))
