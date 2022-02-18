@@ -22,6 +22,21 @@ pointSize = 3
 gr <- as.data.frame(groups)
 autoplot(pca, data=gr, shape="Sex", colour="Tissue", size=pointSize, main="All")
 
+###Control#######
+ControlSamples<-row.names(groups)[groups$Treatment=="Control"]
+blank<- rep(0,length(row.names(cpmdata)))
+names(blank)<-row.names(cpmdata)
+i2<-1 
+while(i2<=length(blank)){
+  blank[i2]=sum(cpmdata[i2,ControlSamples])
+  i2=i2+1
+}
+good<-blank[blank>0]
+
+pointSize = 5
+pca <- prcomp(t(cpmdata[names(good),ControlSamples]), scale.=TRUE)
+gr <- as.data.frame(groups[ControlSamples,])
+autoplot(pca, data=gr, shape="Sex", colour="Tissue", size=pointSize, main="All Control")
 
 #######HeadControl######
 HeadSamples<-row.names(groups)[groups$Tissue=="Head"&groups$Treatment=="Control"]
