@@ -65,19 +65,100 @@ FCA=G_X_E$table
 sFCA=FCA[FCA$FDR<.05,]
 dim(sFCA)
 
-write.csv(sMCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCHvsOOMCH.csv")
-write.csv(MCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCHvsOOMCH.csv")
-write.csv(sFCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCHvsOOFCH.csv")
-write.csv(FCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCHvsOOFCH.csv")
-write.csv(sMCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCTvsOOMCT.csv")
-write.csv(MCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCTvsOOMCT.csv")
-write.csv(sFCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCTvsOOFCT.csv")
-write.csv(FCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCTvsOOFCT.csv")
-write.csv(sMCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCAvsOOMCA.csv")
-write.csv(MCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCAvsOOMCA.csv")
-write.csv(sFCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCAvsOOFCA.csv")
-write.csv(FCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCAvsOOFCA.csv")
+##########
+#write.csv(sMCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCHvsOOMCH.csv")
+#write.csv(MCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCHvsOOMCH.csv")
+#write.csv(sFCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCHvsOOFCH.csv")
+#write.csv(FCH, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCHvsOOFCH.csv")
+#write.csv(sMCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCTvsOOMCT.csv")
+#write.csv(MCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCTvsOOMCT.csv")
+#write.csv(sFCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCTvsOOFCT.csv")
+#write.csv(FCT, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCTvsOOFCT.csv")
+#write.csv(sMCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOMCAvsOOMCA.csv")
+#write.csv(MCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOMCAvsOOMCA.csv")
+#write.csv(sFCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/sig_SOFCAvsOOFCA.csv")
+#write.csv(FCA, "/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/SOFCAvsOOFCA.csv")
 #write.csv(cpmdata,"/Users/Sasha.L.Burgess/Documents/GitHub/Sasha-Honors-Thesis/Final-tables/cpmdata.csv")
+
+#######Histograms?#########
 
 colnames(cpmdata)[43:45]
 design$SOMCT
+
+TRY<-rownames(sMCT)
+write.csv(TRY,"/Users/Sasha.L.Burgess/Desktop/Thesis Bioinformatics/.csv")
+sasha=cpmdata[TRY,2]
+sasha[sasha<20]
+sasha[sasha>100]=100
+hist(sasha,breaks=5, xlim=c(0,100))
+
+########Venn of thorax#######
+library(VennDiagram)
+Malenames<-rownames(sMCT)
+Femalenames<-rownames(sFCT)
+set1<-"Malenames"
+set2<-"Femalenames"
+s1<-Malenames
+s2<-Femalenames
+grid.newpage()
+
+draw.pairwise.venn(area1=length(s1), area2=length(s2),cross.area=length(intersect(s1,s2)),fill=c("blue","red"),cex=1,cat.cex=1,category=c(set1,set2))
+
+######Only DEGs######
+Male.thorax.names<-rownames(sMCT)
+Male.abdomen.names<-rownames(sMCA)
+Male.head.names<-rownames(sMCH)
+Female.thorax.names<-rownames(sFCT)
+Female.abdomen.names<-rownames(sFCA)
+Female.head.names<-rownames(sFCH)
+
+allnames=c(Male.thorax.names, Female.thorax.names)
+newcpmdata<-cpmdata[allnames,]
+
+#####Control pca###
+ControlSamples<-row.names(groups)[groups$Treatment=="Control"]
+blank<- rep(0,length(row.names(newcpmdata)))
+names(blank)<-row.names(newcpmdata)
+i2<-1 
+while(i2<=length(blank)){
+  blank[i2]=sum(newcpmdata[i2,ControlSamples])
+  i2=i2+1
+}
+good<-blank[blank>0]
+
+pointSize = 5
+pca <- prcomp(t(newcpmdata[names(good),ControlSamples]), scale.=TRUE)
+gr <- as.data.frame(groups[ControlSamples,])
+autoplot(pca, data=gr, shape="Sex", colour="Tissue", size=pointSize, main="All Control")
+
+###ThoraxconrtolPCA###
+ThoraxSamples<-row.names(groups)[groups$Tissue=="Thorax"&groups$Treatment=="Control"]
+blank<- rep(0,length(row.names(newcpmdata)))
+names(blank)<-row.names(newcpmdata)
+i2<-1 
+while(i2<=length(blank)){
+  blank[i2]=sum(newcpmdata[i2,ThoraxSamples])
+  i2=i2+1
+}
+good<-blank[blank>0]
+
+pointSize = 5
+pca <- prcomp(t(newcpmdata[names(good),ThoraxSamples]), scale.=TRUE)
+gr <- as.data.frame(groups[ThoraxSamples,])
+autoplot(pca, data=gr, shape="Sex", colour="Species", size=pointSize, main="Thorax")
+
+#####Thorax Male#####
+MaleThoraxSamples<-row.names(groups)[groups$Sex=="Male"&groups$Treatment=="Control"&groups$Tissue=="Thorax"]
+blank<- rep(0,length(row.names(newcpmdata)))
+names(blank)<-row.names(newcpmdata)
+i2<-1 
+while(i2<=length(blank)){
+  blank[i2]=sum(newcpmdata[i2,MaleThoraxSamples])
+  i2=i2+1
+}
+good<-blank[blank>0]
+
+pointSize = 3
+pca <- prcomp(t(newcpmdata[names(good),MaleThoraxSamples]), scale.=TRUE)
+gr <- as.data.frame(groups[MaleThoraxSamples,])
+autoplot(pca, data=gr, shape="Tissue", colour="Species", size=pointSize, main="Male Thorax control")
